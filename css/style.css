@@ -1,0 +1,26 @@
+body {
+  background-color: rgb(159, 215, 252);
+  font-family: Monaco;
+  text-align: center;
+  margin: 40px;
+}
+
+h1 {
+  color: rgb(39, 11, 55);
+  text-align: center;
+}
+
+p {
+  font-family: Monaco;
+  font-size: 20px;
+}
+
+button {
+  background-color: rgb(39, 11, 55);
+  color: white;
+  padding: 12px 24px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 18px;
+}
