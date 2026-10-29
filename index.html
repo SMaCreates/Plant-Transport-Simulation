@@ -4,10 +4,11 @@
     <title>Plant Transport Simulation</title>
     <link rel="stylesheet" href="css/style.css">
     <link href='https://fonts.googleapis.com/css?family=Comfortaa' rel='stylesheet'>
+    <link rel="stylesheet" href="https://pyscript.net">
+    <script type="module" src="https://pyscript.net"></script>
 </head>
 <body>
     <h1>Plant Transport Simulation</h1>
-
     <p>Welcome to the Plant Transport Simulation! This simulation allows you to explore the transport systems of plants under different conditions. You can adjust the conditions to see how they affect the respiration of the plants.</p>
     
     <button id="startButton">Start Simulation</button>
@@ -29,5 +30,58 @@
     </div>
     
     <script src="js/main.js"></script>
+    <script type="py">
+        from pyscript import document
+
+        def calculate_transpiration(humidity, temperature):
+            rate = 1
+            rate *= (1 - humidity / 100)
+            rate *= (1 + (temperature - 20) * 0.05)
+            return max(rate, 0)
+
+        def stomata_opening(light_level):
+            if light_level > 70: return "Open" 
+            elif light_level > 30: return "Half open"
+            else: return "Closed"
+        def water_uptake(soil_moisture):
+            return soil_moisture * 0.2
+        def phloem_loading(sucrose_concentration, light_level):
+            return sucrose_concentration + (light_level * 0.1)
+        def mass_flow(loading_rate, water_uptake):
+            return loading_rate * 0.05 + water_uptake * 0.1
+        def phloem_unloading(pressure, sink_demand):
+            return pressure * (sink_demand / 100)
+        def run_calculations(event):
+        def safe_float(selector, default_value=0.0):
+            val = document.querySelector(selector).value
+            if val is None or str(val).strip() == "":
+                return default_value
+            try:
+                return float(val)
+            except ValueError:
+                return default_value
+
+            humidity = safe_float("#humidity-input", default_value=50.0)
+            temperature = safe_float("#temperature-input", default_value=20.0)
+            light = safe_float("#light-input", default_value=80.0)
+            soil = safe_float("#soil-input", default_value=40.0)
+            sucrose = safe_float("#sucrose-input", default_value=20.0)
+            sink_demand = safe_float("#sink-demand-input", default_value=50.0)
+
+            transpiration = calculate_transpiration(humidity, temperature)
+            stomata = stomata_opening(light)
+            loading = phloem_loading(sucrose, light)
+            w_uptake = water_uptake(soil)
+            pressure = mass_flow(loading, w_uptake)
+            unloading = phloem_unloading(pressure, sink_demand)
+
+            document.querySelector("#transpiration-result").innerText = f"{transpiration:.2f}"
+            document.querySelector("#stomata-result").innerText = stomata
+            document.querySelector("#loading-result").innerText = f"{loading:.2f}"
+            document.querySelector("#pressure-result").innerText = f"{pressure:.2f}"
+            document.querySelector("#unloading-result").innerText = f"{unloading:.2f}"
+        button = document.querySelector("#startButton")
+        button.addEventListener("click", run_calculations)
+    </script>
 </body>
 </html> 
