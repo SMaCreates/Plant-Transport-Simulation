@@ -31,7 +31,8 @@
     
     <script src="js/main.js"></script>
     <script type="py">
-        from pyscript import document
+    
+from pyscript import document, window
 
         def calculate_transpiration(humidity, temperature):
             rate = 1
@@ -49,24 +50,42 @@
             return sucrose_concentration + (light_level * 0.1)
         def mass_flow(loading_rate, water_uptake):
             return loading_rate * 0.05 + water_uptake * 0.1
+
         def phloem_unloading(pressure, sink_demand):
             return pressure * (sink_demand / 100)
-        def run_calculations(event):
-        def safe_float(selector, default_value=0.0):
-            val = document.querySelector(selector).value
-            if val is None or str(val).strip() == "":
-                return default_value
-            try:
-                return float(val)
-            except ValueError:
-                return default_value
+        #def run_calculations(event):
+        #def check_boundaries(selector, default_value=0.0):
 
-            humidity = safe_float("#humidity-input", default_value=50.0)
-            temperature = safe_float("#temperature-input", default_value=20.0)
-            light = safe_float("#light-input", default_value=80.0)
-            soil = safe_float("#soil-input", default_value=40.0)
-            sucrose = safe_float("#sucrose-input", default_value=20.0)
-            sink_demand = safe_float("#sink-demand-input", default_value=50.0)
+        def check_boundaries(selector, min_val, max_val, label_name):
+            val = document.querySelector(selector).value
+            
+            if val is None or str(val).strip() == "":
+                window.alert(f" ERROR: {label_name} cannot be blank!")
+                return None
+            try:
+                float_val = float(val)
+            except ValueError:
+                window.alert(f" ERROR: {label_name} must be a valid number!")
+                return None
+                
+            if float_val < min_val or float_val > max_val:
+                window.alert(f" ERROR: {label_name} must be between {min_val} and {max_val}!")
+                return None
+                
+            return float_val
+
+        def run_calculations(event):
+            humidity = check_boundaries("#humidity-input", 0, 100, "Humidity")
+            temperature = check_boundaries("#temperature-input", -10, 50, "Temperature")
+            light = check_boundaries("#light-input", 0, 100, "Light")
+            soil = check_boundaries("#soil-input", 0, 100, "Soil Moisture")
+            sucrose = check_boundaries("#sucrose-input", 0, 100, "Sucrose Concentration")
+            sink_demand = check_boundaries("#sink-demand-input", 0, 100, "Sink Demand")
+
+        
+            if humidity is None or temperature is None or light is None or soil is None or sucrose is None or sink_demand is None:
+                return
+
 
             transpiration = calculate_transpiration(humidity, temperature)
             stomata = stomata_opening(light)
@@ -80,8 +99,8 @@
             document.querySelector("#loading-result").innerText = f"{loading:.2f}"
             document.querySelector("#pressure-result").innerText = f"{pressure:.2f}"
             document.querySelector("#unloading-result").innerText = f"{unloading:.2f}"
-        button = document.querySelector("#startButton")
-        button.addEventListener("click", run_calculations)
+button = document.querySelector("#startButton")
+button.addEventListener("click", run_calculations)
     </script>
 </body>
 </html> 
