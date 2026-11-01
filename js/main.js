@@ -31,3 +31,5 @@ window.addEventListener('simulationUpdated', (e) => {
     activeMassFlow = e.detail.pressure;
     console.log(`[Sync Matrix] Speed updated. Transpiration: ${activeTranspiration}, Phloem: ${activeMassFlow}`);
 });
+
+ 

@@ -6,7 +6,7 @@
     <link href='https://fonts.googleapis.com/css?family=Comfortaa' rel='stylesheet'>
     <link rel="stylesheet" href="https://pyscript.net">
     <script type="module" src="https://pyscript.net"></script>
-    <script src="https://aframe.io"></script>
+    <script src="https://aframe.io/releases/1.6.0/aframe.min.js"></script>
 
 </head>
 <body>
@@ -30,17 +30,19 @@
         <p><strong>Mass Flow: </strong> <output id="pressure-result">--</output></p>
         <p><strong>Phloem Unloading Rate: </strong> <output id="unloading-result">--</output></p>
     </div>
-        <div class="simulation-visualization">
-        <h2>Simulation Visualization</h2>
-           
-        <div style="width: 100%; height: 400px; background-color: #7bd3ff; margin-top: 10px;">
+        <div class="simulation-visualisation">
+        <h2>Simulation Visualisation</h2>
+        <div style="width: 100%; height: 400px; background-color: #ade2fc; margin-top: 10px;">
             <a-scene embedded style="width: 100%; height: 100%;">
-    <a-assets>
-        <a-asset-item id="Sunflower1" src="Sunflower1.glb"></a-asset-item>
-        </a-assets>
-        <a-camera position="0 1 0"></a-camera>
-    </a-scene>
+                <a-assets>
+                    <a-asset-item id="Sunflower1" src="blender/Sunflower1.glb"></a-asset-item>
+                </a-assets> 
 
+                <a-entity id="plantModel" gltf-model="#Sunflower1" position="0 0 -3" scale="0.5 0.5 0.5"></a-entity>
+                
+                <a-camera position="0 1.6 0"></a-camera> 
+                <a-sky color="#7bd3ff"></a-sky>
+            </a-scene>
         </div>
     </div> 
 
