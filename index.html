@@ -6,6 +6,8 @@
     <link href='https://fonts.googleapis.com/css?family=Comfortaa' rel='stylesheet'>
     <link rel="stylesheet" href="https://pyscript.net">
     <script type="module" src="https://pyscript.net"></script>
+    <script src="https://aframe.io"></script>
+
 </head>
 <body>
     <h1>Plant Transport Simulation</h1>
@@ -28,7 +30,20 @@
         <p><strong>Mass Flow: </strong> <output id="pressure-result">--</output></p>
         <p><strong>Phloem Unloading Rate: </strong> <output id="unloading-result">--</output></p>
     </div>
-    
+        <div class="simulation-visualization">
+        <h2>Simulation Visualization</h2>
+           
+        <div style="width: 100%; height: 400px; background-color: #7bd3ff; margin-top: 10px;">
+            <a-scene embedded style="width: 100%; height: 100%;">
+    <a-assets>
+        <a-asset-item id="Sunflower1" src="Sunflower1.glb"></a-asset-item>
+        </a-assets>
+        <a-camera position="0 1 0"></a-camera>
+    </a-scene>
+
+        </div>
+    </div> 
+
     <script src="js/main.js"></script>
     <script type="py">
     
@@ -81,7 +96,7 @@ from pyscript import document, window
             soil = check_boundaries("#soil-input", 0, 100, "Soil Moisture")
             sucrose = check_boundaries("#sucrose-input", 0, 100, "Sucrose Concentration")
             sink_demand = check_boundaries("#sink-demand-input", 0, 100, "Sink Demand")
-
+            
         
             if humidity is None or temperature is None or light is None or soil is None or sucrose is None or sink_demand is None:
                 return
@@ -93,12 +108,15 @@ from pyscript import document, window
             w_uptake = water_uptake(soil)
             pressure = mass_flow(loading, w_uptake)
             unloading = phloem_unloading(pressure, sink_demand)
-
+          
             document.querySelector("#transpiration-result").innerText = f"{transpiration:.2f}"
             document.querySelector("#stomata-result").innerText = stomata
             document.querySelector("#loading-result").innerText = f"{loading:.2f}"
             document.querySelector("#pressure-result").innerText = f"{pressure:.2f}"
             document.querySelector("#unloading-result").innerText = f"{unloading:.2f}"
+            evt = window.CustomEvent.new("simulationUpdated", {"detail": {"transpiration": transpiration, "pressure": pressure}})
+            window.dispatchEvent(evt)
+
 button = document.querySelector("#startButton")
 button.addEventListener("click", run_calculations)
     </script>
